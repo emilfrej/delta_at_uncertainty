@@ -367,10 +367,12 @@ problem is tractable for a continuous state-space, but Saporta et al.
 Given the hardware used, you might have to change the number of cores
 used for running stan. See the fitting script. Fitting the entire
 procedure took a while (approx. an hour) on a M1 MacBook Air for
-reference. You will need to have the following in place: - Functioning
-version of R and relevant packages installed - Stan properly setup - The
-[patient
-data](https://www.nicholasbruchovsky.com/clinicalResearch.html).
+reference. You will need to have the following in place:
+
+-   Functioning version of R and relevant packages installed
+-   Stan properly setup
+-   The [patient
+    data](https://www.nicholasbruchovsky.com/clinicalResearch.html).
 
 # References
 
