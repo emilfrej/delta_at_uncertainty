@@ -27,7 +27,7 @@ should be straightforward.
 
 Additionally, I investigate how the uncertainty in estimating the Delta AT Score
 changes for each observation made for the specific patient. The trajectory
-in uncertainty makes me somewhat skeptical that the uncertainty in delta
+in uncertainty makes me somewhat skeptical that the uncertainty in Delta
 AT can reliably be decreased to clinically useful levels simply by adding
 more observations. Instead, I think it might be necessary to adopt ideas
 from sequential decision-making under uncertainty such as balancing
@@ -77,27 +77,26 @@ My background is in cognitive science and, beyond likely
 misunderstanding crucial aspects of oncology, it has made me note some
 parallels between mathematical modelling in adaptive therapy and models
 of cognition. Given a forward model, e.g. a Lotka-Volterra
-model, one should be able to infer the underlying parameters of the model
-and thereby predict individual outcomes. I'm mostly familiar with
+model, one should be able to infer the underlying parameters and states of the model such as non-directly observable cell counts. I'm mostly familiar with
 solving this problem using Bayesian inference. Luckily, a Finnish
-master's thesis @forslund showed that this is feasible for at least one
+master's thesis [@forslund] showed that this is feasible for at least one
 specific formulation of the Lotka-Volterra model for prostate cancer.
 
 Bayesian inference produces distributions over plausible parameter
-values instead of point estimates typical of maximum likelihood procedures. The estimate is a distribution, constructed by combining the likelihood function with prior distributions placed on the free parameters.
+values instead of point estimates typical of maximum likelihood procedures. The Bayesian estimate is instead a distribution the uncertainty is described by its density at different parameter values. 
 
-Assuming that uncertainty in estimates is substantial, in my eyes planning adaptive
-therapy for individual patients is a type of sequential decision-making under
-uncertainty. Explore-exploit dynamics could apply, and planning treatment
-might benefit from balancing reward maximization and information gain. In this light, deciding when to
-treat would also depend on the potential information gain from applying
+Assuming that uncertainty in estimates is substantial, planning adaptive
+therapy for to me sounds like sequential decision-making under
+uncertainty. Explore-exploit dynamics could be crucial, and planning treatment
+might benefit from balancing reward maximization and information gain. In this light, optimal decisions on when to
+treat might also depend on the expected information gain from applying
 treatment.
 
 # Quantifying Uncertainty
 
 ## Patient 12
 
-The following data are PSA (biomarker of total cell count) readings normalized by the first
+The following data are PSA readings (biomarker of total cell count) normalized by the first
 observation from a prostate cancer patient undergoing an *intermittent* therapy trial by
 @bruchovsky2006. I'm in doubt whether practitioners would classify this as adaptive therapy, but it is a data set that is frequently used to model adaptive therapy. For example @gallagher, who developed the Delta AT Score that I'm estimating the uncertainty for, use the same data.
 
