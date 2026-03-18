@@ -79,10 +79,10 @@ master's thesis [@forslund] showed that this is feasible for at least one
 specific formulation of the Lotka-Volterra model for prostate cancer.
 
 Bayesian inference produces distributions over plausible parameter
-values instead of point estimates typical of maximum likelihood procedures. The Bayesian estimate is instead a distribution the uncertainty is described by its density at different parameter values. 
+values instead of point estimates typical of maximum likelihood procedures. The Bayesian estimate is a distribution whose uncertainty is described by its density at different parameter values.
 
 Assuming that uncertainty in estimates is substantial, planning adaptive
-therapy for to me sounds like sequential decision-making under
+therapy to me sounds like sequential decision-making under
 uncertainty. Explore-exploit dynamics could be crucial, and planning treatment
 might benefit from balancing reward maximization and information gain. In this light, optimal decisions on when to
 treat might also depend on the expected information gain from applying
@@ -319,7 +319,7 @@ p_SR <- ggplot(cell_sum, aes(x = day)) +
 p_SR
 ```
 
-# Modelling Uncertainty Trough Time
+# Modelling Uncertainty Through Time
 
 To model how uncertainty changes over time, I fit the same model up to
 each $t$. I then
@@ -328,7 +328,7 @@ distribution over each parameter for each fit. This allows us to plot
 credible intervals for each parameter at each fit and examine how
 uncertainty changes with increasing observations.
 
-```{r param_ci}
+```{r param_ci, fig.cap= "*95% Credible Intervals at each observation.*"}
 param_ci_df <- map_dfr(2:N_obs, function(t) {
   cache_path <- file.path(CACHE_DIR, sprintf("p12_t%02d.rds", t))
   fit <- tryCatch(readRDS(cache_path), error = function(e) NULL)
@@ -416,7 +416,7 @@ kl_df <- map_dfr(1:N_obs, function(t) {
          kl_seq_per_day  = kl_seq / days_since_prev)
 ```
 
-```{r}
+```{r, fig.cap="*95% Credible interval for Delta AT at each observation.*"}
 ci_df <- map_dfr(1:N_obs, function(t) {
   post <- post_delta_list[[t]]
   if (is.null(post)) return(NULL)
@@ -462,7 +462,7 @@ The above plot shows credible intervals which are easy to interpret: wider equal
 Crucially, I find that the distribution of the Delta AT Score
 is multimodal for patient 12 given the chosen mathematical model.
 
-```{r plot_delta_densities}
+```{r plot_delta_densities, fig.cap="*Posterior densities for Delta AT at each observation. Darker hues indicate more observations.*"}
 p_dens <- delta_df %>%
   ggplot(aes(x = delta_at, colour = day, fill = day, group = t)) +
   geom_density(alpha = 0.08, linewidth = 0.4) +
@@ -478,7 +478,7 @@ p_dens
 ```
 
 I'd therefore argue that a more principled measure of information gain in the Delta AT Score is the KL divergence between posterior densities at consecutive observations rather than the width of a credible interval. The following plot shows exactly that.
-```{r kl_seq, fig.height=4}
+```{r kl_seq, fig.height=4, fig.cap="*Information Gain in Delta AT at each observation.*"}
 kl_df %>%
   filter(!is.na(kl_seq)) %>%
   ggplot(aes(x = day, y = kl_seq)) +
@@ -491,9 +491,9 @@ My reading of this plot is that information gain in the Delta AT Score does not
 follow a straightforward pattern where more observations generally lead
 to more information. Instead, some observations radically change the
 posterior density for the Delta AT Score. The uneven spacing of observations does
-complicate it a bit however. Nonetheless, I'm guessing take is that the model can't decipher enough about cost nor the initial resistant population until resistant cells make up a substantial part of the PSA signal.
+complicate it a bit however. Nonetheless, my take is that the model can't decipher enough about cost nor the initial resistant population until resistant cells make up a substantial part of the PSA signal.
 
-```{r}
+```{r, fig.cap="*Information gain at each measurement (bars) and inferred cell counts at each time point.*"}
 p_SR + geom_col(data=kl_df, aes(x = day, y = kl_seq), alpha = .3)
 ```
 

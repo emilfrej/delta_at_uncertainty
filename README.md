@@ -1,24 +1,24 @@
 
-- [What is this document?](#what-is-this-document)
-- [What is Adaptive Therapy?](#what-is-adaptive-therapy)
-  - [Prostate Cancer as a Lotka-Volterra
-    Model](#prostate-cancer-as-a-lotka-volterra-model)
-  - [Observations from a Cognitive Science
-    Student](#observations-from-a-cognitive-science-student)
-- [Quantifying Uncertainty](#quantifying-uncertainty)
-  - [Patient 12](#patient-12)
-  - [The Mathematical Model](#the-mathematical-model)
-  - [Inferring Parameter Estimates and
-    Uncertainties](#inferring-parameter-estimates-and-uncertainties)
-  - [Inferring Cell Counts](#inferring-cell-counts)
-- [Modelling Uncertainty Trough
-  Time](#modelling-uncertainty-trough-time)
-  - [KL-Divergence as a Measure of Information
-    Gain](#kl-divergence-as-a-measure-of-information-gain)
-- [All in All](#all-in-all)
-  - [Suggested Next Steps](#suggested-next-steps)
-- [Rerunning this Notebook](#rerunning-this-notebook)
-- [References](#references)
+-   [What is this document?](#what-is-this-document)
+-   [What is Adaptive Therapy?](#what-is-adaptive-therapy)
+    -   [Prostate Cancer as a Lotka-Volterra
+        Model](#prostate-cancer-as-a-lotka-volterra-model)
+    -   [Observations from a Cognitive Science
+        Student](#observations-from-a-cognitive-science-student)
+-   [Quantifying Uncertainty](#quantifying-uncertainty)
+    -   [Patient 12](#patient-12)
+    -   [The Mathematical Model](#the-mathematical-model)
+    -   [Inferring Parameter Estimates and
+        Uncertainties](#inferring-parameter-estimates-and-uncertainties)
+    -   [Inferring Cell Counts](#inferring-cell-counts)
+-   [Modelling Uncertainty Through
+    Time](#modelling-uncertainty-through-time)
+    -   [KL-Divergence as a Measure of Information
+        Gain](#kl-divergence-as-a-measure-of-information-gain)
+-   [All in All](#all-in-all)
+    -   [Suggested Next Steps](#suggested-next-steps)
+-   [Rerunning this Notebook](#rerunning-this-notebook)
+-   [References](#references)
 
 # What is this document?
 
@@ -102,16 +102,15 @@ cancer.
 
 Bayesian inference produces distributions over plausible parameter
 values instead of point estimates typical of maximum likelihood
-procedures. The Bayesian estimate is instead a distribution the
-uncertainty is described by its density at different parameter values.
+procedures. The Bayesian estimate is a distribution whose uncertainty is
+described by its density at different parameter values.
 
 Assuming that uncertainty in estimates is substantial, planning adaptive
-therapy for to me sounds like sequential decision-making under
-uncertainty. Explore-exploit dynamics could be crucial, and planning
-treatment might benefit from balancing reward maximization and
-information gain. In this light, optimal decisions on when to treat
-might also depend on the expected information gain from applying
-treatment.
+therapy to me sounds like sequential decision-making under uncertainty.
+Explore-exploit dynamics could be crucial, and planning treatment might
+benefit from balancing reward maximization and information gain. In this
+light, optimal decisions on when to treat might also depend on the
+expected information gain from applying treatment.
 
 # Quantifying Uncertainty
 
@@ -125,13 +124,9 @@ therapy, but it is a data set that is frequently used to model adaptive
 therapy. For example Gallagher et al. (2025), who developed the Delta AT
 Score that I’m estimating the uncertainty for, use the same data.
 
-<figure>
-<img src="README_files/figure-gfm/psa_plot-1.png"
-alt="Treatment trajectory for patient 12. Dots indicate Prostate Specific Antigen measurements and shaded regions indicate that treatment was given." />
-<figcaption aria-hidden="true"><em>Treatment trajectory for patient 12.
-Dots indicate Prostate Specific Antigen measurements and shaded regions
-indicate that treatment was given.</em></figcaption>
-</figure>
+![*Treatment trajectory for patient 12. Dots indicate Prostate Specific
+Antigen measurements and shaded regions indicate that treatment was
+given.*](README_files/figure-gfm/psa_plot-1.png)
 
 ## The Mathematical Model
 
@@ -160,15 +155,15 @@ certain parameters ($K$, $d_D$ and $r_S$) due to some tractability
 concerns that I won’t pretend to understand. The takeaway is that the
 final model only has the following four free parameters:
 
-- $cost$*.* The penalty in proliferation rate that resistant cells
-  suffer compared to sensitive cells.
+-   $cost$*.* The penalty in proliferation rate that resistant cells
+    suffer compared to sensitive cells.
 
-- $turnover$*.* The rate at which both resistant and sensitive cells die
-  off.
+-   $turnover$*.* The rate at which both resistant and sensitive cells
+    die off.
 
-- $N_0$. The normalized amount of total cancer cells at $t_0$.
+-   $N_0$. The normalized amount of total cancer cells at $t_0$.
 
-- $R_0$. The fraction of resistant cells at $t_0$
+-   $R_0$. The fraction of resistant cells at $t_0$
 
 Given the probabilistic modelling approach, I also have to specify from
 what distribution the observations are sampled. For simplicity, I’ve
@@ -179,8 +174,8 @@ $$PSA_t \sim N(S_t+R_t, \sigma^2)$$
 
 which leaves us with another free parameter:
 
-- $\sigma^2$. The amount of noise in the Prostate Specific Antigen
-  measurements.
+-   $\sigma^2$. The amount of noise in the Prostate Specific Antigen
+    measurements.
 
 By writing up the reparameterized Lotka-Volterra equation in the
 probabilistic programming language *Stan* I can sample parameter values
@@ -192,15 +187,10 @@ mathematical model and priors, since it is unlikely to produce
 observations similar to the actual data. However, it is the same
 mathematical model that Gallagher et al. (2025) use.
 
-<figure>
-<img src="README_files/figure-gfm/fitted_cells-1.png"
-alt="Treatment trajectory for patient 12. Dots indicate PSA measurements and shaded regions indicate that treatment was given. Black line is the median value for S+R at each time point. Grey ribbons represent 95% credible intervals." />
-<figcaption aria-hidden="true"><em>Treatment trajectory for patient 12.
-Dots indicate PSA measurements and shaded regions indicate that
-treatment was given. Black line is the median value for <span
-class="math inline"><em>S</em> + <em>R</em></span> at each time point.
-Grey ribbons represent 95% credible intervals.</em></figcaption>
-</figure>
+![*Treatment trajectory for patient 12. Dots indicate PSA measurements
+and shaded regions indicate that treatment was given. Black line is the
+median value for $S+R$ at each time point. Grey ribbons represent 95%
+credible intervals.*](README_files/figure-gfm/fitted_cells-1.png)
 
 ## Inferring Parameter Estimates and Uncertainties
 
@@ -243,17 +233,13 @@ the uncertainty in cell counts is not constant throughout the
 trajectories, but fluctuates quite a bit for the sensitive population
 and increases for the resistant population.
 
-<figure>
-<img src="README_files/figure-gfm/pred_sr-1.png"
-alt="Inferred cell counts of sensitive (S) and resistant (R) at each timepoint. Ribbons around trajectories denote 95% credible intervals, and shaded regions denote treatment was given. Ticks on the x-axis indicate a Prostate Specific Antigen measurement was made." />
-<figcaption aria-hidden="true"><em>Inferred cell counts of sensitive (S)
-and resistant (R) at each timepoint. Ribbons around trajectories denote
-95% credible intervals, and shaded regions denote treatment was given.
-Ticks on the x-axis indicate a Prostate Specific Antigen measurement was
-made.</em></figcaption>
-</figure>
+![*Inferred cell counts of sensitive (S) and resistant (R) at each
+timepoint. Ribbons around trajectories denote 95% credible intervals,
+and shaded regions denote treatment was given. Ticks on the x-axis
+indicate a Prostate Specific Antigen measurement was
+made.*](README_files/figure-gfm/pred_sr-1.png)
 
-# Modelling Uncertainty Trough Time
+# Modelling Uncertainty Through Time
 
 To model how uncertainty changes over time, I fit the same model up to
 each $t$. I then extract posterior estimates for each fit. In other
@@ -261,7 +247,8 @@ words, there is a distribution over each parameter for each fit. This
 allows us to plot credible intervals for each parameter at each fit and
 examine how uncertainty changes with increasing observations.
 
-![](README_files/figure-gfm/param_ci-1.png)<!-- -->
+![*95% Credible Intervals at each
+observation.*](README_files/figure-gfm/param_ci-1.png)
 
 While the uncertainties here also depend on the chosen priors, which
 likely need reworking from someone who knows oncology, I find it
@@ -275,7 +262,8 @@ of possible parameter combinations.
 The following plot shows the trajectory in uncertainty for the Delta AT
 Score.
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![*95% Credible interval for Delta AT at each
+observation.*](README_files/figure-gfm/unnamed-chunk-2-1.png)
 
 Again the uncertainty doesn’t appear to decrease in a straightforward
 manner. Rather it is extremely large, spanning from 4x to -4x
@@ -298,24 +286,27 @@ distribution.
 Crucially, I find that the distribution of the Delta AT Score is
 multimodal for patient 12 given the chosen mathematical model.
 
-![](README_files/figure-gfm/plot_delta_densities-1.png)<!-- -->
+![*Posterior densities for Delta AT at each observation. Darker hues
+indicate more
+observations.*](README_files/figure-gfm/plot_delta_densities-1.png)
 
 I’d therefore argue that a more principled measure of information gain
 in the Delta AT Score is the KL divergence between posterior densities
 at consecutive observations rather than the width of a credible
-interval. The following plot shows exactly that.
-![](README_files/figure-gfm/kl_seq-1.png)<!-- -->
+interval. The following plot shows exactly that. ![*Information Gain in
+Delta AT at each observation.*](README_files/figure-gfm/kl_seq-1.png)
 
 My reading of this plot is that information gain in the Delta AT Score
 does not follow a straightforward pattern where more observations
 generally lead to more information. Instead, some observations radically
 change the posterior density for the Delta AT Score. The uneven spacing
-of observations does complicate it a bit however. Nonetheless, I’m
-guessing take is that the model can’t decipher enough about cost nor the
-initial resistant population until resistant cells make up a substantial
-part of the PSA signal.
+of observations does complicate it a bit however. Nonetheless, my take
+is that the model can’t decipher enough about cost nor the initial
+resistant population until resistant cells make up a substantial part of
+the PSA signal.
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![*Information gain at each measurement (bars) and inferred cell counts
+at each time point.*](README_files/figure-gfm/unnamed-chunk-3-1.png)
 
 Assuming that this case study in patient 12 is representative, I think
 targeting information gain could be important in planning treatments
@@ -381,15 +372,14 @@ used for running stan. See the fitting script. Fitting the entire
 procedure took a while (approx. an hour) on a M1 MacBook Air for
 reference. You will need to have the following in place:
 
-- Functioning version of R and relevant packages installed
-- Stan properly setup
-- The [patient
-  data](https://www.nicholasbruchovsky.com/clinicalResearch.html)
+-   Functioning version of R and relevant packages installed
+-   Stan properly setup
+-   The [patient
+    data](https://www.nicholasbruchovsky.com/clinicalResearch.html)
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent"
-entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-bruchovsky2006" class="csl-entry">
 
