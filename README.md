@@ -24,9 +24,9 @@
 
 Gallagher et al. (2025) developed two metrics to identify who would
 respond best to an experimental type of cancer therapy. These two
-metrics determine what cancer patients would benefit more from receiving
-*adaptive therapy* rather than standard care. They explicitly state that
-they leave the quantification of uncertainty for these metrics for
+metrics quantify what cancer patients would benefit more from receiving
+*adaptive therapy* rather than standard care. The authors explicitly state that
+they leaft the quantification of uncertainty for these metrics for
 future work. In this document, **I demonstrate how to quantify the
 uncertainty for one of these measures: the *Delta AT Score*.** The Delta
 AT Score is the estimated relative benefit in time-to-progression of
